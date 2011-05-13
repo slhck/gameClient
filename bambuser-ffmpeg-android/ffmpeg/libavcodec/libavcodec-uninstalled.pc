@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}
+includedir=/Users/werner/Dropbox/Uni/2011_SS/AMT_VU/ffmpeg-android/bambuser-ffmpeg-android/ffmpeg
+
+Name: libavcodec
+Description: FFmpeg codec library
+Version: 52.99.1
+Requires: libavcore = 0.16.0
+Conflicts:
+Libs: ${libdir}/libavcodec.a -lm -lz 
+Cflags: -I${includedir}

@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}
+includedir=/Users/werner/Dropbox/Uni/2011_SS/AMT_VU/ffmpeg-android/bambuser-ffmpeg-android/ffmpeg
+
+Name: libavutil
+Description: FFmpeg utility library
+Version: 50.34.0
+Requires: 
+Conflicts:
+Libs: ${libdir}/libavutil.a 
+Cflags: -I${includedir}
