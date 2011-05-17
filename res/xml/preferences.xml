@@ -5,8 +5,16 @@
 		<EditTextPreference android:title="Server IP"
 			android:summary="Enter the game server's IP" android:key="serverIp"
 			android:defaultValue="192.168.0.87"></EditTextPreference>
-		<EditTextPreference android:title="Server Port"
-			android:summary="Enter the game server's port" android:key="serverPort"
-			android:defaultValue="20248"></EditTextPreference>
+		<EditTextPreference android:id="@+id/preference_port"
+			android:title="Server SIP Port" android:summary="Enter the game server's SIP port"
+			android:key="serverPort" android:defaultValue="20248"
+			android:numeric="integer"
+			></EditTextPreference>
+		<EditTextPreference android:id="@+id/preference_port_log"
+			android:title="Server Log Port" android:summary="Enter the game server's Logging port"
+			android:key="serverPortLog" android:defaultValue="20250"
+			android:numeric="integer"
+			></EditTextPreference>
+
 	</PreferenceCategory>
 </PreferenceScreen>

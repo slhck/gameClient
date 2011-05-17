@@ -9,5 +9,5 @@ public class PreferenceActivity extends android.preference.PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 	}
-	
+
 }
