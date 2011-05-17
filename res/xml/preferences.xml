@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="Game Client Preferences">
+	<PreferenceCategory android:title="Server Preferences">
+		<EditTextPreference android:title="Server IP"
+			android:summary="Enter the game server's IP" android:key="serverIp"
+			android:defaultValue="192.168.0.87"></EditTextPreference>
+		<EditTextPreference android:title="Server Port"
+			android:summary="Enter the game server's port" android:key="serverPort"
+			android:defaultValue="20248"></EditTextPreference>
+	</PreferenceCategory>
+</PreferenceScreen>

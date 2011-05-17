@@ -4,9 +4,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
+    <TextView android:text="Welcome to the AMT Game Client!" android:id="@+id/textView1" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content"></TextView>
+    <Button android:text="Start!" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:id="@+id/button_start"></Button>
 </LinearLayout>

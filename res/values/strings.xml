@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, Start!</string>
     <string name="app_name">gameClient</string>
+    <string name="about">gameClient for Android</string>
 </resources>
