@@ -58,7 +58,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initPrefs();
-		initSip();
+		//initSip();
 		initGesture();
 		initView();
 	}
@@ -93,7 +93,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	private void initView() {
 		Log.v(TAG, "Starting video view ... ");
-		mFilename = "/mnt/sdcard/test.mp4";
+		mFilename = "/mnt/sdcard/videos/test.mp4";
 		mGLView = new VideoGLSurfaceView(this, mFilename);
 		setContentView(mGLView);
 	}
