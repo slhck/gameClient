@@ -19,7 +19,7 @@ public class SipDialog {
 	
 	public Thread testThread;
 	
-	public SipDialog(String host, int port) throws UnknownHostException, IOException, NullPointerException, Exception {
+	public SipDialog(String host, int port) throws UnknownHostException, IOException {
 		Log.v("TCP", "start");
 		
 		socket = new Socket(host, port);

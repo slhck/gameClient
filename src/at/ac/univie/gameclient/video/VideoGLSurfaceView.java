@@ -37,6 +37,7 @@ public class VideoGLSurfaceView extends GLSurfaceView {
     }
     
     public boolean onTouchEvent(final MotionEvent event) {
+
     	return true;
     }
     
