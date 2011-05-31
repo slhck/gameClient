@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import at.ac.univie.gameclient.game.GameActivity;
+import at.ac.univie.gameclient.gesture.GestureActivity;
 import at.ac.univie.gameclient.sip.SipDialog;
 import at.ac.univie.gameclient.udp.DatagramReceiver;
 

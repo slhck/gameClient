@@ -91,12 +91,14 @@ public class GameActivity extends Activity implements SensorEventListener {
         m_pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         m_wl = m_pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Game Test");
 				
+        Log.d(TAG, "Finished onCreate");
 		// mGestureLogger =  new GestureLogger(mServerIp, mServerPortLog);
 		
 		// the rest of initialization is in the onResume method
 	}
 	
-	protected void onResume(Bundle savedInstanceState) {
+
+	protected void onResume() {
 		
 		Log.d(TAG, "onResume called");
 		
@@ -139,7 +141,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 		super.onResume();
 	}
 
-	protected void onPause(Bundle savedInstanceState) {
+	protected void onPause() {
 		
 		Log.d(TAG, "onPause called");
 		

@@ -1,11 +1,8 @@
-package at.ac.univie.gameclient;
-
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+package at.ac.univie.gameclient.gesture;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,9 +10,12 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
+import at.ac.univie.gameclient.R;
+import at.ac.univie.gameclient.R.id;
+import at.ac.univie.gameclient.R.layout;
 
 public class GestureActivity extends Activity implements SensorEventListener {
 
@@ -36,6 +36,14 @@ public class GestureActivity extends Activity implements SensorEventListener {
 	float[] 		m_rotated 	= new float[3];
 	float[]			m_magnetic	= new float[3];
 	float[]			m_accel		= new float[3];
+
+	private SharedPreferences mPreferences;
+
+	private String mServerIp;
+	private int mServerPort;
+	private int mServerPortLog;
+
+	private GestureLogger mGestureLogger;
 		
 		
     @Override
@@ -46,6 +54,26 @@ public class GestureActivity extends Activity implements SensorEventListener {
         m_sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         m_pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         m_wl = m_pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Gesture Test");
+        
+        try {
+			mPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			mServerIp = mPreferences.getString("serverIp", null);
+			mServerPort = Integer.parseInt(mPreferences.getString("serverPort", "0"));
+			mServerPortLog = Integer.parseInt(mPreferences.getString("serverPortLog", "0"));
+		} catch (NumberFormatException e) {
+			Log.e(TAG, "Error loading preferences: " + e.getMessage());
+			Log.e(TAG, "Exiting video view.");
+			finish();
+		}
+		
+		// create a gesture logger
+		try {
+			mGestureLogger = new GestureLogger(mServerIp, mServerPort);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Log.e(TAG, "Could not create Gesture Logger: " + e.toString());
+		}
         
         // Get all Views from the main layout
         setContentView(R.layout.gesture_log);
@@ -83,7 +111,13 @@ public class GestureActivity extends Activity implements SensorEventListener {
 			SensorManager.AXIS_Z, m_R_out);
 			*/
 			SensorManager.getOrientation(m_R, m_rotated);
+			double yaw = Math.toDegrees(m_rotated[0]);
+			double pitch = Math.toDegrees(m_rotated[1]);
+			double roll = Math.toDegrees(m_rotated[2]);
+			
 			m_pitch.setText("Pitch: " + Math.toDegrees(m_rotated[1]));
+			
+			mGestureLogger.sendGestureFromSensor(yaw, pitch, roll);
 		}
 	}
 
@@ -106,12 +140,13 @@ public class GestureActivity extends Activity implements SensorEventListener {
     
     @Override
     protected void onStop() {
+    	super.onStop();
+    	
         // unregister listener and clean up
         if ( m_sm != null )
         	m_sm.unregisterListener(this);
         if ( m_wl != null )
         	m_wl.release();
-        super.onStop();
     }    
 
 }

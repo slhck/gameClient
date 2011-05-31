@@ -20,7 +20,12 @@ public class GestureLogger {
 	private final String TAG = "GestureLogger";
 	
 	
-	public GestureLogger(String ip, int port) {
+	public GestureLogger(String ip, int port) throws Exception {
+		Log.d(TAG, "Creating new Gesture Logger for " + ip + ":" + port);
+		
+		if (sInitialized)
+			throw new Exception("Can't initialize two gesture loggers at the same time!");
+		
 		sServerIp = ip;
 		sServerPort = port;
 		
@@ -29,11 +34,19 @@ public class GestureLogger {
 		} catch (SocketException e) {
 			Log.e(TAG, "Error opening socket: " + e.getMessage());
 		}
+		
 		sInitialized = true;
+		
+	}
+	
+	public void close() {
+		Log.d(TAG, "Closing Gesture Logger");
+		sSock.close();
+		sInitialized = false;
 	}
 	
 	
-	public void sendGestureFromSensor() {
+	public void sendGestureFromSensor(double yaw, double pitch, double roll) {
 		
 		// TODO map sensor values to gesture and send it / them
 		
