@@ -89,11 +89,17 @@ public class Start extends Activity {
 			 prefIntent.setClass(getApplicationContext(),
 					 PreferenceActivity.class);
 			 startActivity(prefIntent);
-		 return true;
+			 return true;
 		
 		 // Display the about dialog
 		 case R.id.menu_about:
 			 showDialog(DIALOG_ABOUT_ID);
+			 return true;
+			 
+		 case R.id.menu_gesture:
+			 Intent gestureIntent = new Intent();
+			 gestureIntent.setClass(getApplicationContext(), GestureActivity.class);
+			 startActivity(gestureIntent);
 			 return true;
 		
 		 // Exit the application

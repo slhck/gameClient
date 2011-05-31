@@ -19,6 +19,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.TextView;
 import at.ac.univie.gameclient.gesture.GestureLogger;
 import at.ac.univie.gameclient.sip.SipDialog;
 import at.ac.univie.gameclient.sip.SipRequest;
@@ -46,15 +47,20 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 	// Members related to gesture logging
 	private static final int m_matrix_size = 16;
+	private static final int SPEED = SensorManager.SENSOR_DELAY_FASTEST;
+
+	SensorManager m_sm = null;
+	PowerManager m_pm = null;
+	WakeLock m_wl = null;
+
+	TextView m_pitch = null;
+
 	float[] m_R = new float[m_matrix_size];
 	float[] m_R_out = new float[m_matrix_size];
 	float[] m_I = new float[m_matrix_size];
 	float[] m_rotated = new float[3];
 	float[] m_magnetic = new float[3];
 	float[] m_accel = new float[3];
-	GestureLogger mGestureLogger;
-	private static final int SPEED = SensorManager.SENSOR_DELAY_FASTEST;
-	SensorManager m_sm = null;
 
 	
 	
@@ -62,10 +68,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "gameClient");
-		
+			
 		Log.d(TAG, "Reloading preferences");
 		
 		try {
@@ -83,9 +86,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 		Log.d(TAG, "Port: " + mServerPort);
 		Log.d(TAG, "Sending Gestures to: " + mServerPortLog);
 		
-		Log.d(TAG, "Initializing Gestures...");
-		m_sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-		mGestureLogger =  new GestureLogger(mServerIp, mServerPortLog);
+		// Prepare tools for vibration, sensor management and wakelock
+        m_sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        m_pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        m_wl = m_pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Game Test");
+				
+		// mGestureLogger =  new GestureLogger(mServerIp, mServerPortLog);
 		
 		// the rest of initialization is in the onResume method
 	}
@@ -94,7 +100,16 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 		Log.d(TAG, "onResume called");
 		
-		wl.acquire();
+		m_wl.acquire();
+		
+        // register this class as a listener for the magnetic field sensor
+        m_sm.registerListener(this,
+        		m_sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+                SPEED); 
+        // register this class as a listener for the acceleration sensor
+        m_sm.registerListener(this,
+        		m_sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SPEED); 
 		
 		VideoStreamDecoder videoStreamDecoder = new VideoStreamDecoder();
         setContentView(new Panel(this, videoStreamDecoder));
@@ -140,28 +155,29 @@ public class GameActivity extends Activity implements SensorEventListener {
 			e.printStackTrace();
 		}
 		
-		wl.release();
+		m_wl.release();
 
 		super.onPause();
 	}
+	
+    @Override
+    protected void onStop() {
+        // unregister listener and clean up
+        if ( m_sm != null )
+        	m_sm.unregisterListener(this);
+        super.onStop();
+    }  
 
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// shouldn't need to do anything here
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Evaluates sensor changes. Code base from CACMTV, written by Ewald Hotop
-	 */
 	public void onSensorChanged(SensorEvent event) {
-
-		Log.d(TAG, "onSensorChanged called");
-		
 		// Do not evaluate sensor data if not reliable
-		if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
-			Log.w(TAG, "Unreliable sensor data!");
-			return;			
-		}
-		
+		if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE)
+			return;
+				
 		// Which sensor has changed?
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_MAGNETIC_FIELD:
@@ -172,13 +188,19 @@ public class GameActivity extends Activity implements SensorEventListener {
 			break;
 		}
 
+
 		// Now calculate azimuth, pitch and roll
 		if (m_magnetic != null && m_accel != null) {
 			SensorManager.getRotationMatrix(m_R, m_I, m_accel, m_magnetic);
+			/*
+			// Correct if screen is in Landscape
+			SensorManager.remapCoordinateSystem(m_R,
+			SensorManager.AXIS_X,
+			SensorManager.AXIS_Z, m_R_out);
+			*/
 			SensorManager.getOrientation(m_R, m_rotated);
-			double pitch = Math.toDegrees(m_rotated[1]);
-			Log.d(TAG, "Current pitch: " + pitch);
-		}
-	}
+			Log.d(TAG, "Pitch: " + Math.toDegrees(m_rotated[1]));
+		}	
+	}	
 
 }
