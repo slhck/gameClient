@@ -1,9 +1,5 @@
 package at.ac.univie.gameclient.sip;
 
-import at.ac.univie.gameclient.sip.SipConstants;
-import at.ac.univie.gameclient.sip.SipDialog;
-import at.ac.univie.gameclient.sip.SipRequest;
-import at.ac.univie.gameclient.sip.SipRequestType;
 
 public class SipServerRequest extends SipRequest {
 	

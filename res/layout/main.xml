@@ -1,28 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-	<TextView android:text="Welcome to the AMT Game Client!"
-		android:id="@+id/textView1" android:layout_height="wrap_content"
-		android:layout_gravity="center" android:layout_width="wrap_content"
-		android:paddingBottom="10px"
-		android:paddingTop="10px"
-		android:paddingLeft="10px"
-		android:paddingRight="10px"
-		>
-		</TextView>
-	<TextView
-		android:text="Go to the settings to change the default server IP and port. Then press Start below."
-		android:id="@+id/textView2" android:layout_height="wrap_content"
-		android:layout_gravity="center" android:layout_width="wrap_content"
-		android:paddingBottom="10px"
-		android:paddingTop="10px"
-		android:paddingLeft="10px"
-		android:paddingRight="10px"
-		>
-		</TextView>
-		
-	<Button android:text="Start!" android:layout_height="wrap_content"
-		android:layout_gravity="center" android:layout_width="wrap_content"
-		android:id="@+id/button_start"></Button>
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TextView android:text="Welcome to the AMT Game Client!" android:id="@+id/textView1" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content"></TextView>
+    <Button android:text="Start!" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:id="@+id/button_start"></Button>
 </LinearLayout>

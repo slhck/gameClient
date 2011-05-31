@@ -13,9 +13,11 @@ Java_at_ac_univie_gameclient_xvid_Decoder_initDecoder( JNIEnv*  env,
                                       jint     width,
                                       jint     height )
 {
+	//__android_log_write(2, "cgClient_native", "jnidecode.cpp initDecoder begin");
 	initDecoder(width, height);
 	gwidth = width;
 	gheight = height;
+	//__android_log_write(2, "cgClient_native", "jnidecode.cpp initDecoder end");
 }
 
 JNIEXPORT jint JNICALL
@@ -24,10 +26,11 @@ Java_at_ac_univie_gameclient_xvid_Decoder_copyToDecoderBuffer(JNIEnv*  env,
 							jbyteArray data,
 							jsize length)
 {
+	//__android_log_write(2, "cgClient_native", "jnidecode.cpp copyToDecoderBuffer begin");
 	jbyteArray body = env->NewByteArray(length);
 	env->GetByteArrayRegion(data, 0, length, (jbyte*)body);
 	jint aib = copyToDecoderBuffer((unsigned char*)body, length);
-	__android_log_write(2, "cgClient_native", "copied to decoder buffer");
+	//__android_log_write(2, "cgClient_native", "jnidecode.cpp copyToDecoderBuffer end");
 
 	return aib;
 }
@@ -36,17 +39,14 @@ JNIEXPORT jbyteArray JNICALL
 Java_at_ac_univie_gameclient_xvid_Decoder_decodeOneFrame(JNIEnv*  env,
                                       			jobject  thiz)
 {
+	//__android_log_write(2, "cgClient_native", "jnidecode.cpp decodeOneFrame begin");
 	jbyteArray jb;
 	jint size = gwidth*gheight*3;
 	jb=env->NewByteArray(size);
 	env->SetByteArrayRegion(jb, 0, size, (jbyte *)decodeOneFrame());
-	__android_log_write(2, "cgClient_native", "retrieved one frame");
-	return jb;
+	//__android_log_write(2, "cgClient_native", "jnidecode.cpp decodeOneFrame end");
 
-	/*if(decCount < 1)
-		__android_log_write(2, "cgClient_native", "tried to decode one frame");
-	else
-		__android_log_write(2, "cgClient_native", "decoded one frame");*/
+	return jb;
 }
 
 /*JNIEXPORT jbyteArray JNICALL

@@ -8,7 +8,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libxvidcore
 #LOCAL_CFLAGS = -DFIXED_POINT -DEXPORT=”" -UHAVE_CONFIG_H -I$(LOCAL_PATH)/include
-LOCAL_CFLAGS := -DARCH_IS_32BIT -DARCH_IS_GENERIC -I$(LOCAL_PATH)/libxvidcore/src -lc
+LOCAL_CFLAGS := -DARCH_IS_32BIT -DARCH_IS_GENERIC -I$(LOCAL_PATH)/libxvidcore/src -lc -g -DHAVE_NEON=1
 
 LOCAL_SRC_FILES :=  \
 ./libxvidcore/src/decoder.c \
@@ -63,9 +63,10 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libxviddecoder
-LOCAL_CFLAGS := -lc
+LOCAL_CFLAGS := -lc -g -DHAVE_NEON=1
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/libxvidcore/src
 LOCAL_STATIC_LIBRARIES := libxvidcore
+LOCAL_LDLIBS := -llog
 LOCAL_SRC_FILES := \
 DecodeVideoXVID.cpp \
 XvidDecoder.cpp \
@@ -80,7 +81,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libxvidjnidecoder
-LOCAL_CFLAGS := -lc
+LOCAL_CFLAGS := -lc -g -DHAVE_NEON=1
 LOCAL_SRC_FILES := jnidecode.cpp
 
 

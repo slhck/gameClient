@@ -1,0 +1,2 @@
+set solib-search-path /home/c/Downloads/slhck-gameClient-fbbcc20/obj/local/armeabi
+directory /home/c/android-ndk/platforms/android-8/arch-arm/usr/include /home/c/android-ndk/sources/cxx-stl/system /home/c/Downloads/slhck-gameClient-fbbcc20/jni /home/c/Downloads/slhck-gameClient-fbbcc20/jni/libxvidcore/src /home/c/android-ndk/sources/cxx-stl/system/include

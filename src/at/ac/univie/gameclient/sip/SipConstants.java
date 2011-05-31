@@ -1,10 +1,5 @@
 package at.ac.univie.gameclient.sip;
 
-import at.ac.univie.gameclient.sip.SipAddress;
-import at.ac.univie.gameclient.sip.SipFrom;
-import at.ac.univie.gameclient.sip.SipTo;
-import at.ac.univie.gameclient.sip.SipUtility;
-import at.ac.univie.gameclient.sip.SipVia;
 
 public class SipConstants {
 	public static SipTo to = new SipTo("Server", new SipAddress("sip:server@192.168.0.86"));

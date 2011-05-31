@@ -1,5 +1,5 @@
 #include "XvidDecoder.h"
-
+#include <android/log.h>
 
 XvidDecoder::XvidDecoder(int width, int height)
 {
@@ -23,18 +23,21 @@ XvidDecoder::~XvidDecoder(void)
 
 int XvidDecoder::copyToBuffer(unsigned char * data, int count)
 {
-	bufferMutex.tryLock();
+	//__android_log_write(2, "cgClient_native", "XvidDecoder.cpp copyToBuffer begin");
+	//bufferMutex.tryLock();
 	memcpy(buffer+alreadyInBuffer, data, count);
 	alreadyInBuffer +=count;
 	int aib = alreadyInBuffer;
-	bufferMutex.unlock();
+	//bufferMutex.unlock();
+	//__android_log_write(2, "cgClient_native", "XvidDecoder.cpp copyToBuffer end");
 
 	return aib;
 }
 
 unsigned char * XvidDecoder::decodeOneFrame()
 {
-	bufferMutex.tryLock();
+	//__android_log_write(2, "cgClient_native", "XvidDecoder.cpp decodeOneFrame begin");
+	//bufferMutex.tryLock();
 	int decCount = 0;
 	do
 	{	
@@ -43,7 +46,8 @@ unsigned char * XvidDecoder::decodeOneFrame()
 		memcpy(buffer, buffer+decCount, alreadyInBuffer);
 	}
 	while(decCount > 0 && alreadyInBuffer > 1);
-	bufferMutex.unlock();
+	//bufferMutex.unlock();
+	//__android_log_write(2, "cgClient_native", "XvidDecoder.cpp decodeOneFrame end");
 
 	return frame;
 }

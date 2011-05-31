@@ -1,6 +1,7 @@
 package at.ac.univie.gameclient.video;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 class VideoPresenter extends Thread {

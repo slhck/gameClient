@@ -1,5 +1,7 @@
 package at.ac.univie.gameclient.rtp;
 
+import android.util.Log;
+
 // http://webcache.googleusercontent.com/search?q=cache:hWBgr2ZCXzkJ:www.cs.umbc.edu/~pmundur/courses/CMSC691C/RTPpacket.html+rtp+header+java&cd=2&hl=en&ct=clnk&client=ubuntu&source=www.google.com
 public class RtpPacket{
 
@@ -14,7 +16,7 @@ public class RtpPacket{
 	public int Marker;
 	public int PayloadType;
 	public int SequenceNumber;
-	public int TimeStamp;
+	public long TimeStamp;
 	public int Ssrc;
 	
 	//Bitstream of the RTP header
@@ -97,9 +99,13 @@ public class RtpPacket{
 		  payload[i-HEADER_SIZE] = packet[i];
 	
 		//interpret the changing fields of the header:
+		Marker = ((header[1] & 0x80) >> 7);
 		PayloadType = header[1] & 127;
-		SequenceNumber = (int)(header[3]) + 256*(int)(header[2]);
-		TimeStamp = (int)(header[7]) + 256*(int)(header[6]) + 65536*(int)(header[5]) + 16777216*(int)(header[4]);
+		//SequenceNumber = (int)(header[3]) + 256*(int)(header[2]);
+		//TimeStamp = (int)(header[7]) + 256*(int)(header[6]) + 65536*(int)(header[5]) + 16777216*(int)(header[4]);
+	    //Log.v("TIMESTAMP", TimeStamp+"");
+		TimeStamp = bytesToUIntLong(header, 4);
+		SequenceNumber = bytesToUIntInt(header, 2);
 	    }
 	}
 	
@@ -147,7 +153,7 @@ public class RtpPacket{
 	//gettimestamp
 	//--------------------------
 	
-	public int gettimestamp() {
+	public long gettimestamp() {
 	  return(TimeStamp);
 	}
 	
@@ -163,6 +169,39 @@ public class RtpPacket{
 	//--------------------------
 	public int getpayloadtype() {
 	  return(PayloadType);
+	}
+
+	/** 
+	 * Combines four bytes (most significant bit first) into a 32 bit unsigned integer.
+	 * 
+	 * @param bytes
+	 * @param index of most significant byte
+	 * @return long with the 32 bit unsigned integer
+	 */
+	public static long bytesToUIntLong(byte[] bytes, int index) {
+		long accum = 0;
+		int i = 3;
+		for (int shiftBy = 0; shiftBy < 32; shiftBy += 8 ) {
+			accum |= ( (long)( bytes[index + i] & 0xff ) ) << shiftBy;
+			i--;
+		}
+		return accum;
+	}
+
+	/** 
+	 * Combines two bytes (most significant bit first) into a 16 bit unsigned integer.
+	 * 
+	 * @param index of most significant byte
+	 * @return int with the 16 bit unsigned integer
+	 */
+	public static int bytesToUIntInt(byte[] bytes, int index) {
+		int accum = 0;
+		int i = 1;
+		for (int shiftBy = 0; shiftBy < 16; shiftBy += 8 ) {
+			accum |= ( (long)( bytes[index + i] & 0xff ) ) << shiftBy;
+			i--;
+		}
+		return accum;
 	}
 
 }
