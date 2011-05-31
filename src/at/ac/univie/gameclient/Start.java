@@ -1,9 +1,6 @@
 package at.ac.univie.gameclient;
 
-import java.io.IOException;
 import java.net.DatagramSocket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,27 +10,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import at.ac.univie.gameclient.game.GameActivity;
 import at.ac.univie.gameclient.sip.SipDialog;
-import at.ac.univie.gameclient.sip.SipRequest;
-import at.ac.univie.gameclient.sip.SipRequestType;
-import at.ac.univie.gameclient.sip.SipServerRequest;
 import at.ac.univie.gameclient.udp.DatagramReceiver;
-import at.ac.univie.gameclient.video.Panel;
-import at.ac.univie.gameclient.video.VideoStreamDecoder;
 
 public class Start extends Activity {
 	private static final int DIALOG_ABOUT_ID = 0;
 	private static final String TAG = "Start";
 	
-	private String mServerIp = "192.168.0.87";
-	private int mServerPort = 20248;
+	private String mServerIp;
+	private int mServerPort;
+	private int mServerPortLog;
 	private SharedPreferences mPreferences;
 
 	SipDialog sipDialog;
@@ -49,8 +45,22 @@ public class Start extends Activity {
 		
         super.onCreate(savedInstanceState);
         
-        
         setContentView(R.layout.main);
+        
+		try {
+			mPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			mServerIp = mPreferences.getString("serverIp", null);
+			mServerPort = Integer.parseInt(mPreferences.getString("serverPort", "0"));
+			mServerPortLog = Integer.parseInt(mPreferences.getString("serverPortLog", "0"));
+		} catch (NumberFormatException e) {
+			Log.e(TAG, "Error loading preferences: " + e.getMessage());
+			Log.e(TAG, "Exiting video view.");
+			finish();
+		}
+        
+		TextView serverInfo = (TextView) findViewById(R.id.textServerLabel);
+		serverInfo.setText("Server Connection: " + mServerIp + ":" + mServerPort);
 		
 		Button buttonStart = (Button) findViewById(R.id.button_start);
 		buttonStart.setOnClickListener(mButtonStartListener);

@@ -8,5 +8,8 @@
 		<EditTextPreference android:title="Server Port"
 			android:summary="Enter the game server's port" android:key="serverPort"
 			android:defaultValue="20248"></EditTextPreference>
+		<EditTextPreference android:title="Server Logging Port"
+			android:summary="Enter the game server's logging port" android:key="serverPortLog"
+			android:defaultValue="20249"></EditTextPreference>
 	</PreferenceCategory>
 </PreferenceScreen>

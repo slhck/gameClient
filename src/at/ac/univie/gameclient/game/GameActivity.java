@@ -30,22 +30,19 @@ import at.ac.univie.gameclient.video.VideoStreamDecoder;
 
 public class GameActivity extends Activity implements SensorEventListener {
 
-	SipDialog sipDialog;
-	
-	DatagramReceiver datagramReceiver;
-	DatagramSocket videoStreamSocket;
-	
-	PowerManager.WakeLock wl;
 	
 	// General members
 	private SharedPreferences mPreferences;
 	private static final String TAG = "GameActivity";
-
+	DatagramReceiver datagramReceiver;
+	DatagramSocket videoStreamSocket;
+	PowerManager.WakeLock wl;
+	
 	// SIP and Log server members
 	private String mServerIp;
 	private int mServerPort;
 	private int mServerPortLog;
-	private SipDialog mSipDialog;
+	SipDialog sipDialog;
 
 	// Members related to gesture logging
 	private static final int m_matrix_size = 16;
@@ -58,8 +55,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 	GestureLogger mGestureLogger;
 	private static final int SPEED = SensorManager.SENSOR_DELAY_FASTEST;
 	SensorManager m_sm = null;
-	PowerManager m_pm = null;
-	WakeLock m_wl = null;
 
 	
 	
@@ -67,15 +62,41 @@ public class GameActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initPrefs();
-		initGesture();
+		
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "gameClient");
+		
+		Log.d(TAG, "Reloading preferences");
+		
+		try {
+			mPreferences = PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext());
+			mServerIp = mPreferences.getString("serverIp", null);
+			mServerPort = Integer.parseInt(mPreferences.getString("serverPort", "0"));
+			mServerPortLog = Integer.parseInt(mPreferences.getString("serverPortLog", "0"));
+		} catch (NumberFormatException e) {
+			Log.e(TAG, "Error loading preferences: " + e.getMessage());
+			Log.e(TAG, "Exiting video view.");
+			finish();
+		}
+		Log.d(TAG, "Receiving from: " + mServerIp);
+		Log.d(TAG, "Port: " + mServerPort);
+		Log.d(TAG, "Sending Gestures to: " + mServerPortLog);
+		
+		Log.d(TAG, "Initializing Gestures...");
+		m_sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+		mGestureLogger =  new GestureLogger(mServerIp, mServerPortLog);
+		
+		// the rest of initialization is in the onResume method
 	}
 	
 	protected void onResume(Bundle savedInstanceState) {
 		
+		Log.d(TAG, "onResume called");
+		
 		wl.acquire();
-        
-        VideoStreamDecoder videoStreamDecoder = new VideoStreamDecoder();
+		
+		VideoStreamDecoder videoStreamDecoder = new VideoStreamDecoder();
         setContentView(new Panel(this, videoStreamDecoder));
        
         try {
@@ -104,7 +125,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 	}
 
 	protected void onPause(Bundle savedInstanceState) {
-		super.onPause();
+		
+		Log.d(TAG, "onPause called");
 		
 		datagramReceiver.interrupt();
 		videoStreamSocket.close();
@@ -122,32 +144,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 		super.onPause();
 	}
-	
-
-	private void initGesture() {
-		m_sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-		m_pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		m_wl = m_pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Video Playback");
-		mGestureLogger =  new GestureLogger(mServerIp, mServerPortLog);
-	}
-
-	/**
-	 * Updates the preferences when the activity is resumed
-	 */
-	private void initPrefs() {
-		Log.v(TAG, "Reloading preferences");
-		try {
-			mPreferences = PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext());
-			mServerIp = mPreferences.getString("serverIp", null);
-			mServerPort = Integer.parseInt(mPreferences.getString("serverPort", null));
-			mServerPortLog = Integer.parseInt(mPreferences.getString("serverPortLog", null));
-		} catch (NumberFormatException e) {
-			Log.e(TAG, "Error loading preferences: " + e.getMessage());
-			Log.e(TAG, "Exiting video view.");
-			finish();
-		}
-	}
 
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 		// shouldn't need to do anything here
@@ -158,10 +154,14 @@ public class GameActivity extends Activity implements SensorEventListener {
 	 */
 	public void onSensorChanged(SensorEvent event) {
 
+		Log.d(TAG, "onSensorChanged called");
+		
 		// Do not evaluate sensor data if not reliable
-		if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE)
-			return;
-
+		if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+			Log.w(TAG, "Unreliable sensor data!");
+			return;			
+		}
+		
 		// Which sensor has changed?
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_MAGNETIC_FIELD:
@@ -177,7 +177,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			SensorManager.getRotationMatrix(m_R, m_I, m_accel, m_magnetic);
 			SensorManager.getOrientation(m_R, m_rotated);
 			double pitch = Math.toDegrees(m_rotated[1]);
-			Log.v(TAG, "Current pitch: " + pitch);
+			Log.d(TAG, "Current pitch: " + pitch);
 		}
 	}
 
