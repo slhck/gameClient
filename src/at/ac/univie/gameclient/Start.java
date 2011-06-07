@@ -48,6 +48,16 @@ public class Start extends Activity {
         
         setContentView(R.layout.main);
         
+		
+		Button buttonStart = (Button) findViewById(R.id.button_start);
+		buttonStart.setOnClickListener(mButtonStartListener);
+
+	}
+	
+	public void onResume() {
+		
+		super.onResume(); 
+		
 		try {
 			mPreferences = PreferenceManager
 					.getDefaultSharedPreferences(getBaseContext());
@@ -62,10 +72,6 @@ public class Start extends Activity {
         
 		TextView serverInfo = (TextView) findViewById(R.id.textServerLabel);
 		serverInfo.setText("Server Connection: " + mServerIp + ":" + mServerPort);
-		
-		Button buttonStart = (Button) findViewById(R.id.button_start);
-		buttonStart.setOnClickListener(mButtonStartListener);
-
 	}
 
 

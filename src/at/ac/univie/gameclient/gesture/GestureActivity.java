@@ -28,7 +28,9 @@ public class GestureActivity extends Activity implements SensorEventListener {
 	PowerManager 	m_pm = null;
 	WakeLock 		m_wl = null;
 	
+	TextView		m_yaw = null;
 	TextView		m_pitch = null;
+	TextView		m_roll = null;
 	
 	float[] 		m_R 		= new float[m_matrix_size];
 	float[] 		m_R_out 	= new float[m_matrix_size];
@@ -44,8 +46,9 @@ public class GestureActivity extends Activity implements SensorEventListener {
 	private int mServerPortLog;
 
 	private GestureLogger mGestureLogger;
-		
-		
+	private long lastLog = 0;
+	private static final int DELAY = 500;
+			
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +81,9 @@ public class GestureActivity extends Activity implements SensorEventListener {
         // Get all Views from the main layout
         setContentView(R.layout.gesture_log);
         
-        m_pitch = (TextView) findViewById(R.id.textPitch); 
+        m_yaw = (TextView) findViewById(R.id.textYaw);
+        m_pitch = (TextView) findViewById(R.id.textPitch);
+        m_roll = (TextView) findViewById(R.id.textRoll);
     }
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -86,6 +91,18 @@ public class GestureActivity extends Activity implements SensorEventListener {
 
 	public void onSensorChanged(SensorEvent event) {
 
+		// Do not evaluate if too soon
+		long currentTime = System.currentTimeMillis();
+		Log.d(TAG, "Current time is     " + currentTime);
+		Log.d(TAG, "Last Log is         " + lastLog);
+		Log.d(TAG, "Last log + delay is " + (lastLog + DELAY));
+		if (currentTime <= (lastLog + DELAY)) {
+			Log.d(TAG, "Not sending gesture.");
+			return;
+		}
+		Log.d(TAG, "Sending gesture.");
+		lastLog = currentTime;
+		
 		// Do not evaluate sensor data if not reliable
 		if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE)
 			return;
@@ -104,18 +121,20 @@ public class GestureActivity extends Activity implements SensorEventListener {
 		// Now calculate azimuth, pitch and roll
 		if (m_magnetic != null && m_accel != null) {
 			SensorManager.getRotationMatrix(m_R, m_I, m_accel, m_magnetic);
-			/*
+			
 			// Correct if screen is in Landscape
 			SensorManager.remapCoordinateSystem(m_R,
 			SensorManager.AXIS_X,
 			SensorManager.AXIS_Z, m_R_out);
-			*/
+			
 			SensorManager.getOrientation(m_R, m_rotated);
 			double yaw = Math.toDegrees(m_rotated[0]);
 			double pitch = Math.toDegrees(m_rotated[1]);
 			double roll = Math.toDegrees(m_rotated[2]);
 			
-			m_pitch.setText("Pitch: " + Math.toDegrees(m_rotated[1]));
+			m_yaw.setText("Yaw:    " + yaw);
+			m_pitch.setText("Pitch: " + pitch);
+			m_roll.setText("Roll:  " + roll);
 			
 			mGestureLogger.sendGestureFromSensor(yaw, pitch, roll);
 		}
