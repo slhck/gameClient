@@ -71,7 +71,7 @@ public class Start extends Activity {
 		}
         
 		TextView serverInfo = (TextView) findViewById(R.id.textServerLabel);
-		serverInfo.setText("Server Connection: " + mServerIp + ":" + mServerPort);
+		serverInfo.setText("Server Connection: " + mServerIp + ":" + mServerPort + ", logging to " + mServerPortLog);
 	}
 
 

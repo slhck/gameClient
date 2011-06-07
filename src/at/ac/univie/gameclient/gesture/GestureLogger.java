@@ -91,6 +91,7 @@ public class GestureLogger {
 		Log.d(TAG, "sendGesture called");
 		String message = "" + type + (int) val;
 		Log.d(TAG, "sending message: " + message);
+		
 		// sendMessage(message);
 	}
 

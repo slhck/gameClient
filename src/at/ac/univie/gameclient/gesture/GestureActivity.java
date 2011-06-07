@@ -31,6 +31,7 @@ public class GestureActivity extends Activity implements SensorEventListener {
 	TextView		m_yaw = null;
 	TextView		m_pitch = null;
 	TextView		m_roll = null;
+	public TextView		m_message = null;
 	
 	float[] 		m_R 		= new float[m_matrix_size];
 	float[] 		m_R_out 	= new float[m_matrix_size];
@@ -84,6 +85,7 @@ public class GestureActivity extends Activity implements SensorEventListener {
         m_yaw = (TextView) findViewById(R.id.textYaw);
         m_pitch = (TextView) findViewById(R.id.textPitch);
         m_roll = (TextView) findViewById(R.id.textRoll);
+        m_message = (TextView) findViewById(R.id.textMessage);
     }
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -93,14 +95,9 @@ public class GestureActivity extends Activity implements SensorEventListener {
 
 		// Do not evaluate if too soon
 		long currentTime = System.currentTimeMillis();
-		Log.d(TAG, "Current time is     " + currentTime);
-		Log.d(TAG, "Last Log is         " + lastLog);
-		Log.d(TAG, "Last log + delay is " + (lastLog + DELAY));
 		if (currentTime <= (lastLog + DELAY)) {
-			Log.d(TAG, "Not sending gesture.");
 			return;
 		}
-		Log.d(TAG, "Sending gesture.");
 		lastLog = currentTime;
 		
 		// Do not evaluate sensor data if not reliable
