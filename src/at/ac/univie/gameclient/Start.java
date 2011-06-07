@@ -66,8 +66,6 @@ public class Start extends Activity {
 			mServerPortLog = Integer.parseInt(mPreferences.getString("serverPortLog", "0"));
 		} catch (NumberFormatException e) {
 			Log.e(TAG, "Error loading preferences: " + e.getMessage());
-			Log.e(TAG, "Exiting video view.");
-			finish();
 		}
         
 		TextView serverInfo = (TextView) findViewById(R.id.textServerLabel);

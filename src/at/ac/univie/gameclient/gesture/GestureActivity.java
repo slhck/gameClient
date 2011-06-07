@@ -78,6 +78,13 @@ public class GestureActivity extends Activity implements SensorEventListener {
 			// TODO Auto-generated catch block
 			Log.e(TAG, "Could not create Gesture Logger: " + e.toString());
 		}
+		
+		// set its preferences
+		try {
+			mGestureLogger.setPreferences(PreferenceManager.getDefaultSharedPreferences(getBaseContext()));			
+		} catch (Exception e) {
+			Log.e(TAG, "Could not set Logger's preferences: " + e.toString());
+		}
         
         // Get all Views from the main layout
         setContentView(R.layout.gesture_log);
@@ -134,6 +141,7 @@ public class GestureActivity extends Activity implements SensorEventListener {
 			m_roll.setText("Roll:  " + (int) roll);
 			
 			mGestureLogger.sendGestureFromSensor(yaw, pitch, roll);
+			
 			m_message.setText(mGestureLogger.lastMessage);
 		}
 	}

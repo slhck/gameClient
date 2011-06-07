@@ -6,10 +6,21 @@
 			android:summary="Enter the game server's IP" android:key="serverIp"
 			android:defaultValue="192.168.0.87"></EditTextPreference>
 		<EditTextPreference android:title="Server Port"
-			android:summary="Enter the game server's port" android:key="serverPort"
+			android:summary="Enter the game server's port" android:key="serverPort" android:numeric="integer" android:maxLength="5"
 			android:defaultValue="20248"></EditTextPreference>
 		<EditTextPreference android:title="Server Logging Port"
-			android:summary="Enter the game server's logging port" android:key="serverPortLog"
+			android:summary="Enter the game server's logging port" android:key="serverPortLog" android:numeric="integer" android:maxLength="5"
 			android:defaultValue="20249"></EditTextPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="Gesture Recognition">
+		<EditTextPreference android:title="Sensitivity" android:key="sensitivity"
+		android:summary="The sensitivity of the recognition (i.e. how much do the values have to change). Higher means more sensitive. Default is 1."
+		android:defaultValue="1"></EditTextPreference>
+		<EditTextPreference android:title="Amplification" android:key="amplification"
+		android:summary="Defines how much the raw values are amplified before being read. Higher means more sensitive. Default is 1."
+		android:defaultValue="1"></EditTextPreference>
+		<EditTextPreference android:title="Zero Range" android:key="zero"
+		android:summary="Defines the range in degrees around 0 in which no movement is detected. Higher means a wider range. Default is 3."
+		android:defaultValue="3"></EditTextPreference>
 	</PreferenceCategory>
 </PreferenceScreen>

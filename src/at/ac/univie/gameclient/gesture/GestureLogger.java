@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -46,8 +48,6 @@ public class GestureLogger {
 	 *            The destination IP of the remote server
 	 * @param port
 	 *            The destination port
-	 * @param sensitivity
-	 *            The sensitivity of gesture recognition
 	 * @throws Exception
 	 */
 	public GestureLogger(String ip, int port) throws Exception {
@@ -57,14 +57,16 @@ public class GestureLogger {
 			throw new Exception(
 					"Can't initialize two gesture loggers at the same time!");
 
+		// set server information
 		serverIp = ip;
 		serverPort = port;
 		
+		// default values
 		sensitivity = 1;
 		amplification = 1;
-		zero = 20;
+		zero = 3;
 		lastPitch = 0;
-
+		
 		try {
 			sock = new DatagramSocket();
 		} catch (SocketException e) {
@@ -73,6 +75,17 @@ public class GestureLogger {
 
 		sInitialized = true;
 
+	}
+	
+	public void setPreferences(SharedPreferences sharedPreferences) {
+		try {
+			// TODO find something more beautiful than to give the methods NULL here.
+			setSensitivity(Float.parseFloat(sharedPreferences.getString("sensitivity", null)));
+			setAmplification(Float.parseFloat(sharedPreferences.getString("amplification", null)));
+			setZero(Float.parseFloat(sharedPreferences.getString("zero", null)));
+		} catch (NumberFormatException e) {
+			Log.e(TAG, "Failed to set preferences: " + e.toString());
+		}
 	}
 
 	/**
