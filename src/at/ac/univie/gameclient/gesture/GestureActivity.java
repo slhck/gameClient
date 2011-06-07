@@ -31,7 +31,7 @@ public class GestureActivity extends Activity implements SensorEventListener {
 	TextView		m_yaw = null;
 	TextView		m_pitch = null;
 	TextView		m_roll = null;
-	public TextView		m_message = null;
+	TextView		m_message = null;
 	
 	float[] 		m_R 		= new float[m_matrix_size];
 	float[] 		m_R_out 	= new float[m_matrix_size];
@@ -48,7 +48,7 @@ public class GestureActivity extends Activity implements SensorEventListener {
 
 	private GestureLogger mGestureLogger;
 	private long lastLog = 0;
-	private static final int DELAY = 500;
+	private static final int DELAY = 100;
 			
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,11 +129,12 @@ public class GestureActivity extends Activity implements SensorEventListener {
 			double pitch = Math.toDegrees(m_rotated[1]);
 			double roll = Math.toDegrees(m_rotated[2]);
 			
-			m_yaw.setText("Yaw:    " + yaw);
-			m_pitch.setText("Pitch: " + pitch);
-			m_roll.setText("Roll:  " + roll);
+			m_yaw.setText("Yaw:    " + (int) yaw);
+			m_pitch.setText("Pitch: " + (int) pitch);
+			m_roll.setText("Roll:  " + (int) roll);
 			
 			mGestureLogger.sendGestureFromSensor(yaw, pitch, roll);
+			m_message.setText(mGestureLogger.lastMessage);
 		}
 	}
 
