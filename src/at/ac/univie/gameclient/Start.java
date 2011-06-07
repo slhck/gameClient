@@ -48,7 +48,6 @@ public class Start extends Activity {
         
         setContentView(R.layout.main);
         
-		
 		Button buttonStart = (Button) findViewById(R.id.button_start);
 		buttonStart.setOnClickListener(mButtonStartListener);
 

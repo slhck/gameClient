@@ -12,14 +12,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
- * A pseudo-singleton class that logs Gestures
+ * A class that logs gestures
  * 
  * @author werner
  * 
  */
 public class GestureLogger {
-
-	private static boolean sInitialized;
 	
 	// server related
 	private String serverIp;
@@ -53,10 +51,6 @@ public class GestureLogger {
 	public GestureLogger(String ip, int port) throws Exception {
 		Log.d(TAG, "Creating new Gesture Logger for " + ip + ":" + port);
 
-		if (sInitialized)
-			throw new Exception(
-					"Can't initialize two gesture loggers at the same time!");
-
 		// set server information
 		serverIp = ip;
 		serverPort = port;
@@ -73,17 +67,13 @@ public class GestureLogger {
 			Log.e(TAG, "Error opening socket: " + e.getMessage());
 		}
 
-		sInitialized = true;
-
 	}
 	
 	public void setPreferences(SharedPreferences sharedPreferences) {
 		try {
 			// TODO find something more beautiful than to give the methods NULL here.
-			setSensitivity(Float.parseFloat(sharedPreferences.getString("sensitivity", null)));
-			setAmplification(Float.parseFloat(sharedPreferences.getString("amplification", null)));
-			setZero(Float.parseFloat(sharedPreferences.getString("zero", null)));
-		} catch (NumberFormatException e) {
+			
+		} catch (Exception e) {
 			Log.e(TAG, "Failed to set preferences: " + e.toString());
 		}
 	}
@@ -124,7 +114,6 @@ public class GestureLogger {
 	public void close() {
 		Log.d(TAG, "Closing Gesture Logger");
 		sock.close();
-		sInitialized = false;
 	}
 
 	/**
@@ -137,40 +126,45 @@ public class GestureLogger {
 	 */
 	public void sendGestureFromSensor(double yaw, double pitch, double roll) {
 		
-		// the boundary is the amount in degrees that the raw values will have to change before a real change is recognized
-		double boundary = FLUCT_PITCH * sensitivity;
-		
-		// the pitch is amplified according to the settings
-		pitch = pitch * AMP_PITCH * amplification;
-		
-		// if the pitch is within the zero range, just set it to 0
-		if ( (pitch > (-1 * zero)) && (pitch < (zero)) ) {
-			pitch = 0;
-		} 
-		// if not, correct it by subtracting/adding the zero value to get 0 again
-		else {
-			if (pitch > 0)
-				pitch -= zero;
-			else
-				pitch += zero;
-		}
-		
-		// default type means: no movement was detected
-		// this happens when the pitch only changes within the fluctuation bounds
-		int type = GestureType.TYPE_NO_MOVEMENT;
-		
-		// if the pitch is positive, the phone was moved to the left
-		if (pitch > lastPitch + boundary) {
-			type = GestureType.TYPE_LEFT;
+		try {
+			// the boundary is the amount in degrees that the raw values will have to change before a real change is recognized
+			double boundary = FLUCT_PITCH * sensitivity;
+			
+			// the pitch is amplified according to the settings
+			pitch = pitch * AMP_PITCH * amplification;
+			
+			// if the pitch is within the zero range, just set it to 0
+			if ( (pitch > (-1 * zero)) && (pitch < (zero)) ) {
+				pitch = 0;
+			} 
+			// if not, correct it by subtracting/adding the zero value to get 0 again
+			else {
+				if (pitch > 0)
+					pitch -= zero;
+				else
+					pitch += zero;
+			}
+			
+			// default type means: no movement was detected
+			// this happens when the pitch only changes within the fluctuation bounds
+			int type = GestureType.TYPE_NO_MOVEMENT;
+			
+			// if the pitch is positive, the phone was moved to the left
+			if (pitch > lastPitch + boundary) {
+				type = GestureType.TYPE_LEFT;
 
-		// if the pitch is negative, the phone was moved to the right
-		} else if (pitch < (lastPitch - boundary)) {
-			type = GestureType.TYPE_RIGHT;
-		}
+			// if the pitch is negative, the phone was moved to the right
+			} else if (pitch < (lastPitch - boundary)) {
+				type = GestureType.TYPE_RIGHT;
+			}
 
-		// finally send the gesture and mark the pitch to compare it in the next round
-		sendGesture(type, pitch, pitch - lastPitch);
-		lastPitch = pitch;
+			// finally send the gesture and mark the pitch to compare it in the next round
+			sendGesture(type, pitch, pitch - lastPitch);
+			lastPitch = pitch;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Log.e(TAG, "Error while converting gesture: " + e.toString());
+		}
 	}
 
 	/**

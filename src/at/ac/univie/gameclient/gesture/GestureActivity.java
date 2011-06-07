@@ -59,7 +59,32 @@ public class GestureActivity extends Activity implements SensorEventListener {
         m_pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         m_wl = m_pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "Gesture Test");
         
-        try {
+        
+        
+        // Get all Views from the main layout
+        setContentView(R.layout.gesture_log);
+        
+        m_yaw = (TextView) findViewById(R.id.textYaw);
+        m_pitch = (TextView) findViewById(R.id.textPitch);
+        m_roll = (TextView) findViewById(R.id.textRoll);
+        m_message = (TextView) findViewById(R.id.textMessage);
+    }
+
+    protected void onResume() {
+    	super.onResume();
+    	
+        m_wl.acquire();
+        
+        // register this class as a listener for the magnetic field sensor
+        m_sm.registerListener(this,
+        		m_sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+                SPEED); 
+        // register this class as a listener for the acceleration sensor
+        m_sm.registerListener(this,
+        		m_sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SPEED); 
+    	
+    	try {
 			mPreferences = PreferenceManager
 					.getDefaultSharedPreferences(getBaseContext());
 			mServerIp = mPreferences.getString("serverIp", null);
@@ -73,28 +98,27 @@ public class GestureActivity extends Activity implements SensorEventListener {
 		
 		// create a gesture logger
 		try {
-			mGestureLogger = new GestureLogger(mServerIp, mServerPort);
+			if (mGestureLogger == null)
+				mGestureLogger = new GestureLogger(mServerIp, mServerPort);				
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Log.e(TAG, "Could not create Gesture Logger: " + e.toString());
 		}
 		
-		// set its preferences
+		// set its preferences (possibly again, if they were changed)
 		try {
-			mGestureLogger.setPreferences(PreferenceManager.getDefaultSharedPreferences(getBaseContext()));			
+			if (mGestureLogger != null) {
+				mGestureLogger.setSensitivity(Float.parseFloat(mPreferences.getString("sensitivity", null)));
+				mGestureLogger.setAmplification(Float.parseFloat(mPreferences.getString("amplification", null)));
+				mGestureLogger.setZero(Float.parseFloat(mPreferences.getString("zero", null)));							
+			}
+				
 		} catch (Exception e) {
 			Log.e(TAG, "Could not set Logger's preferences: " + e.toString());
 		}
-        
-        // Get all Views from the main layout
-        setContentView(R.layout.gesture_log);
-        
-        m_yaw = (TextView) findViewById(R.id.textYaw);
-        m_pitch = (TextView) findViewById(R.id.textPitch);
-        m_roll = (TextView) findViewById(R.id.textRoll);
-        m_message = (TextView) findViewById(R.id.textMessage);
+		
     }
-
+    
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
 
@@ -145,23 +169,6 @@ public class GestureActivity extends Activity implements SensorEventListener {
 			m_message.setText(mGestureLogger.lastMessage);
 		}
 	}
-
-	
-	@Override
-    protected void onResume() {
-        super.onResume();
-        
-        m_wl.acquire();
-        
-        // register this class as a listener for the magnetic field sensor
-        m_sm.registerListener(this,
-        		m_sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-                SPEED); 
-        // register this class as a listener for the acceleration sensor
-        m_sm.registerListener(this,
-        		m_sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SPEED); 
-    }
     
     @Override
     protected void onStop() {
