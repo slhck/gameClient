@@ -110,7 +110,8 @@ public class GestureActivity extends Activity implements SensorEventListener {
 			if (mGestureLogger != null) {
 				mGestureLogger.setSensitivity(Float.parseFloat(mPreferences.getString("sensitivity", null)));
 				mGestureLogger.setAmplification(Float.parseFloat(mPreferences.getString("amplification", null)));
-				mGestureLogger.setZero(Float.parseFloat(mPreferences.getString("zero", null)));							
+				mGestureLogger.setZeroPitch(Float.parseFloat(mPreferences.getString("zeroPitch", null)));
+				mGestureLogger.setZeroRoll(Float.parseFloat(mPreferences.getString("zeroRoll", null)));
 			}
 				
 		} catch (Exception e) {
@@ -149,12 +150,7 @@ public class GestureActivity extends Activity implements SensorEventListener {
 		// Now calculate azimuth, pitch and roll
 		if (m_magnetic != null && m_accel != null) {
 			SensorManager.getRotationMatrix(m_R, m_I, m_accel, m_magnetic);
-			
-			// Correct if screen is in Landscape
-			SensorManager.remapCoordinateSystem(m_R,
-			SensorManager.AXIS_X,
-			SensorManager.AXIS_Z, m_R_out);
-			
+	
 			SensorManager.getOrientation(m_R, m_rotated);
 			double yaw = Math.toDegrees(m_rotated[0]);
 			double pitch = Math.toDegrees(m_rotated[1]);
