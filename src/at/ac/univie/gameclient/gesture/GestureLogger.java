@@ -176,7 +176,15 @@ public class GestureLogger {
 			// the pitch is amplified according to the settings
 			pitch = pitch * AMP_PITCH * amplification;
 			roll = roll * AMP_ROLL * amplification;
-			
+
+			// Recalculate the roll value so that the new center is at 0 (just
+			// like pitch)
+			// for example: -45 would become 0, -90 would become -45, etc.
+			roll += centerRoll;
+
+			// -----------------------------------------------------------
+			// Pitch calculations
+
 			// if the pitch is within the zeroPitch range, just set it to 0
 			if ((pitch > (-1 * zeroPitch)) && (pitch < (zeroPitch))) {
 				pitch = 0;
@@ -208,6 +216,10 @@ public class GestureLogger {
 			// next round
 			sendGesture(type, pitch, pitch - lastPitch);
 			lastPitch = pitch;
+			
+			// -----------------------------------------------------------
+			// Roll calculations
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Log.e(TAG, "Error while converting gesture: " + e.toString());
