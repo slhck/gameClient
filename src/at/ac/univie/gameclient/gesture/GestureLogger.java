@@ -177,23 +177,19 @@ public class GestureLogger {
 	private void sendGesture(int type, double val, double interval) {
 		// TODO the message is composed of integers only at the moment
 		String message = "" + type + "#" + (int) val + "#" + (int) Math.abs(interval);
-		Log.d(TAG, "sending message: " + message);
 		lastMessage = message;
-		// sendMessage(message);
+		sendMessage(message);
 	}
 
 	/**
 	 * Sends a message to the UDP server
-	 * 
 	 * @param message
 	 */
 	private void sendMessage(String message) {
 		try {
 			InetAddress local = InetAddress.getByName(serverIp);
-			int length = message.length();
 			byte[] messageRaw = message.getBytes();
-			DatagramPacket p = new DatagramPacket(messageRaw, length, local,
-					serverPort);
+			DatagramPacket p = new DatagramPacket(messageRaw, messageRaw.length, local, serverPort);
 			sock.send(p);
 		} catch (UnknownHostException e) {
 			Log.e(TAG, "Host not known: " + e.getMessage());

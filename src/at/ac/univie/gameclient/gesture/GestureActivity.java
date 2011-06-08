@@ -99,7 +99,7 @@ public class GestureActivity extends Activity implements SensorEventListener {
 		// create a gesture logger
 		try {
 			if (mGestureLogger == null)
-				mGestureLogger = new GestureLogger(mServerIp, mServerPort);				
+				mGestureLogger = new GestureLogger(mServerIp, mServerPortLog);				
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Log.e(TAG, "Could not create Gesture Logger: " + e.toString());
