@@ -7,5 +7,10 @@
   <TextView android:text="" android:id="@+id/textYaw" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
   <TextView android:text="" android:id="@+id/textPitch" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
   <TextView android:text="" android:id="@+id/textRoll" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>    
+  
+  <TextView android:text="" android:id="@+id/textYawRecalc" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
+  <TextView android:text="" android:id="@+id/textPitchRecalc" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
+  <TextView android:text="" android:id="@+id/textRollRecalc" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
+  
   <TextView android:text="" android:id="@+id/textMessage" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="15dp" android:paddingBottom="5dp"></TextView>
 </LinearLayout>

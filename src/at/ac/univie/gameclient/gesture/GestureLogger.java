@@ -43,6 +43,10 @@ public class GestureLogger {
 	private static final int FLUCT_ROLL = 1;
 	private static final int AMP_ROLL = 1;
 
+	private static final int INDEX_YAW = 0;
+	private static final int INDEX_PITCH = 1;
+	private static final int INDEX_ROLL = 2;
+	
 	// debugging related
 	private static final String TAG = "GestureLogger";
 	public String lastMessage;
@@ -67,7 +71,7 @@ public class GestureLogger {
 		sensitivity = 1;
 		amplification = 1;
 		zeroPitch = 3;
-		zeroRoll = 3;
+		zeroRoll = 10;
 		centerRoll = 45;
 		lastPitch = 0;
 
@@ -78,15 +82,6 @@ public class GestureLogger {
 		}
 
 	}
-
-	// public void setPreferences(SharedPreferences sharedPreferences) {
-	// try {
-	// // TODO find something more beautiful than to give the methods NULL here.
-	//
-	// } catch (Exception e) {
-	// Log.e(TAG, "Failed to set preferences: " + e.toString());
-	// }
-	// }
 
 	/**
 	 * Sets the sensitivity of the GestureLogger The sensitivity is inverted, so
@@ -123,7 +118,7 @@ public class GestureLogger {
 	 * Sets the zeroRoll boundary, i.e. the boundary in degrees where no
 	 * movement should be detected. A higher value results in less sensitivity
 	 * and a broader interval. A lower value results in higher sensitivity.
-	 * Default value is 3.
+	 * Default value is 10.
 	 * 
 	 * @param zero
 	 */
@@ -168,7 +163,16 @@ public class GestureLogger {
 	 */
 	public void sendGestureFromSensor(double yaw, double pitch, double roll) {
 
+		
 		try {
+			// declare return members (an array of the size 3)
+			int[] type = new int[3];
+			double[] val = new double[3];
+			double[] interval = new double[3];
+
+			// -----------------------------------------------------------
+			// Precalculations
+			
 			// the boundary is the amount in degrees that the raw values will
 			// have to change before a real change is recognized
 			double boundary = FLUCT * sensitivity;
@@ -177,8 +181,8 @@ public class GestureLogger {
 			pitch = pitch * AMP_PITCH * amplification;
 			roll = roll * AMP_ROLL * amplification;
 
-			// Recalculate the roll value so that the new center is at 0 (just
-			// like pitch)
+			// Recalculate the roll value so that the new center is at 0. Then
+			// the values behave just like the pitch.
 			// for example: -45 would become 0, -90 would become -45, etc.
 			roll += centerRoll;
 
@@ -201,24 +205,61 @@ public class GestureLogger {
 			// default type means: no movement was detected
 			// this happens when the pitch only changes within the fluctuation
 			// bounds
-			int type = GestureType.TYPE_NO_MOVEMENT;
+			type[INDEX_PITCH] = GestureType.TYPE_NO_MOVEMENT;
 
 			// if the pitch is positive, the phone was moved to the left
 			if (pitch > lastPitch + boundary) {
-				type = GestureType.TYPE_LEFT;
+				type[INDEX_PITCH] = GestureType.TYPE_LEFT;
 
 				// if the pitch is negative, the phone was moved to the right
 			} else if (pitch < (lastPitch - boundary)) {
-				type = GestureType.TYPE_RIGHT;
+				type[INDEX_PITCH] = GestureType.TYPE_RIGHT;
 			}
 
-			// finally send the gesture and mark the pitch to compare it in the
+			// send the gesture and mark the pitch to compare it in the
 			// next round
-			sendGesture(type, pitch, pitch - lastPitch);
+			val[INDEX_PITCH] = pitch;
+			interval[INDEX_PITCH] = pitch - lastPitch;
 			lastPitch = pitch;
-			
+
 			// -----------------------------------------------------------
 			// Roll calculations
+			// if the pitch is within the zeroPitch range, just set it to 0
+			if ((roll > (-1 * zeroRoll)) && (roll < (zeroRoll))) {
+				roll = 0;
+			}
+			// if not, correct it by subtracting/adding the zeroPitch value to
+			// get 0 again
+			else {
+				if (roll > 0)
+					roll -= zeroRoll;
+				else
+					roll += zeroRoll;
+			}
+
+			// default type means: no movement was detected
+			// this happens when the roll only changes within the fluctuation
+			// bounds
+			type[INDEX_ROLL] = GestureType.TYPE_NO_MOVEMENT;
+
+			// if the roll is positive, the phone was moved downwards
+			if (roll > lastRoll + boundary) {
+				type[INDEX_ROLL] = GestureType.TYPE_DOWN;
+
+			// if the roll is negative, the phone was moved upwards
+			} else if (roll < (lastRoll - boundary)) {
+				type[INDEX_ROLL] = GestureType.TYPE_UP;
+			}
+			
+			// send the gesture and mark the pitch to compare it in the
+			// next round
+			val[INDEX_ROLL] = roll;
+			interval[INDEX_ROLL] = roll - lastRoll;
+			lastRoll = roll;
+			
+			// -----------------------------------------------------------
+			// Finally send gesture, which is composed of the arrays defined before
+			sendGesture(type, val, interval);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -230,17 +271,22 @@ public class GestureLogger {
 	 * Converts a gesture into a proper UDP message
 	 * 
 	 * @param type
-	 *            The gesture type
+	 *            The gesture types
 	 * @param val
-	 *            The value of the gesture
+	 *            The values of the gestures
 	 * @param interval
-	 *            The
+	 *            The intervals of the gestures
 	 */
-	private void sendGesture(int type, double val, double interval) {
+	private void sendGesture(int type[], double val[], double interval[]) {
 		// TODO the message is composed of integers only at the moment
-		String message = "" + type + "#" + (int) val + "#"
-				+ (int) Math.abs(interval);
+		
+		String message = "";
+		message += "T-" + type[INDEX_PITCH] + "-" + (int) val[INDEX_PITCH] + "-" + (int) Math.abs(interval[INDEX_PITCH]) + "#";
+		message += "T-" + type[INDEX_ROLL] + "-" + (int) val[INDEX_ROLL] + "-" + (int) Math.abs(interval[INDEX_ROLL]) + "#";
+		
+		// set the last message sent so the activity can display it
 		lastMessage = message;
+		
 		sendMessage(message);
 	}
 

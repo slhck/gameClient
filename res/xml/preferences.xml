@@ -23,8 +23,8 @@
 		android:summary="Defines the range in degrees around 0 in which no movement is detected. Higher means a wider range. Default is 3."
 		android:defaultValue="3"></EditTextPreference>
 		<EditTextPreference android:title="Zero Roll Range" android:key="zeroRoll"
-		android:summary="Defines the range in degrees around the center in which no movement is detected. Higher means a wider range. Default is 3."
-		android:defaultValue="3"></EditTextPreference>
+		android:summary="Defines the range in degrees around the center in which no movement is detected. Higher means a wider range. Default is 10."
+		android:defaultValue="10"></EditTextPreference>
 		<EditTextPreference android:title="Roll Center" android:key="centerRoll"
 		android:summary="Defines the angle in which no up/down movement should be detected. Enter anything between 0 (phone lying on table) and 180 (phone upside down). Default is 45."
 		android:defaultValue="45"></EditTextPreference>
