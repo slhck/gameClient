@@ -29,3 +29,5 @@ When the client is exited, it sends a message to the server to stop encoding.
 ## Gesture Recognition
 
 Basic gesture recognition is built into the application. During the gaming activity, the phone's sensors are read in short intervals. The pitch, yaw and roll values can be extracted and will be sent to the server as a gesture. The server shall then interpret the gestures.
+
+There are preferences that can be set to change the gesture recognition. Open the preferences to see more details.
