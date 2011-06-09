@@ -2,5 +2,5 @@
 <resources>
     <string name="hello">Hello World, Start!</string>
     <string name="app_name">gameClient</string>
-    <string name="about">gameClient for Android</string>
+    <string name="about">gameClient for Android, github.com/slhck/gameClient, written by Christoph Czepa and Werner Robitza</string>
 </resources>

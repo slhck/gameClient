@@ -281,8 +281,8 @@ public class GestureLogger {
 		// TODO the message is composed of integers only at the moment
 		
 		String message = "";
-		message += "T-" + type[INDEX_PITCH] + "-" + (int) val[INDEX_PITCH] + "-" + (int) Math.abs(interval[INDEX_PITCH]) + "#";
-		message += "T-" + type[INDEX_ROLL] + "-" + (int) val[INDEX_ROLL] + "-" + (int) Math.abs(interval[INDEX_ROLL]) + "#";
+		message += "LR/" + type[INDEX_PITCH] + "/" + (int) val[INDEX_PITCH] + "/" + (int) Math.abs(interval[INDEX_PITCH]) + "#";
+		message += "UD/" + type[INDEX_ROLL] + "/" + (int) val[INDEX_ROLL] + "/" + (int) Math.abs(interval[INDEX_ROLL]) + "#";
 		
 		// set the last message sent so the activity can display it
 		lastMessage = message;
