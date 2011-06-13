@@ -283,6 +283,7 @@ public class GestureLogger {
 		String message = "";
 		message += "LR/" + type[INDEX_PITCH] + "/" + (int) val[INDEX_PITCH] + "/" + (int) Math.abs(interval[INDEX_PITCH]) + "#";
 		message += "UD/" + type[INDEX_ROLL] + "/" + (int) val[INDEX_ROLL] + "/" + (int) Math.abs(interval[INDEX_ROLL]) + "#";
+		message += "\n";
 		
 		// set the last message sent so the activity can display it
 		lastMessage = message;
