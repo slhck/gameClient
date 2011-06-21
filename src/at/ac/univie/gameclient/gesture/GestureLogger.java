@@ -169,6 +169,7 @@ public class GestureLogger {
 			int[] type = new int[3];
 			double[] val = new double[3];
 			double[] interval = new double[3];
+			int[] position = new int[3];
 
 			// -----------------------------------------------------------
 			// Precalculations
@@ -215,6 +216,13 @@ public class GestureLogger {
 			} else if (pitch < (lastPitch - boundary)) {
 				type[INDEX_PITCH] = GestureType.TYPE_RIGHT;
 			}
+			
+			if (pitch > 0) 
+				position[INDEX_PITCH] = PositionType.TYPE_LEFT;
+			else if (pitch < 0)
+				position[INDEX_PITCH] = PositionType.TYPE_RIGHT;
+			else
+				position[INDEX_PITCH] = PositionType.TYPE_CENTER;
 
 			// send the gesture and mark the pitch to compare it in the
 			// next round
@@ -251,6 +259,13 @@ public class GestureLogger {
 				type[INDEX_ROLL] = GestureType.TYPE_UP;
 			}
 			
+			if (roll > 0) 
+				position[INDEX_ROLL] = PositionType.TYPE_DOWN;
+			else if (roll < 0)
+				position[INDEX_ROLL] = PositionType.TYPE_UP;
+			else
+				position[INDEX_ROLL] = PositionType.TYPE_CENTER;
+			
 			// send the gesture and mark the pitch to compare it in the
 			// next round
 			val[INDEX_ROLL] = roll;
@@ -259,7 +274,7 @@ public class GestureLogger {
 			
 			// -----------------------------------------------------------
 			// Finally send gesture, which is composed of the arrays defined before
-			sendGesture(type, val, interval);
+			sendGesture(type, val, interval, position);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -277,12 +292,12 @@ public class GestureLogger {
 	 * @param interval
 	 *            The intervals of the gestures
 	 */
-	private void sendGesture(int type[], double val[], double interval[]) {
+	private void sendGesture(int type[], double val[], double interval[], int position[]) {
 		// TODO the message is composed of integers only at the moment
 		
 		String message = "";
-		message += "LR/" + type[INDEX_PITCH] + "/" + (int) val[INDEX_PITCH] + "/" + (int) Math.abs(interval[INDEX_PITCH]) + "#";
-		message += "UD/" + type[INDEX_ROLL] + "/" + (int) val[INDEX_ROLL] + "/" + (int) Math.abs(interval[INDEX_ROLL]) + "#";
+		message += "LR/" + type[INDEX_PITCH] + "/" + (int) val[INDEX_PITCH] + "/" + (int) Math.abs(interval[INDEX_PITCH]) + "/" + position[INDEX_PITCH] + "#";
+		message += "UD/" + type[INDEX_ROLL] + "/" + (int) val[INDEX_ROLL] + "/" + (int) Math.abs(interval[INDEX_ROLL]) + "/" + position[INDEX_ROLL] + "#";
 		message += "\n";
 		
 		// set the last message sent so the activity can display it
@@ -321,4 +336,12 @@ abstract class GestureType {
 	public static final int TYPE_DOWN = 2;
 	public static final int TYPE_LEFT = 3;
 	public static final int TYPE_NO_MOVEMENT = 4;
+}
+
+abstract class PositionType {
+	public static final int TYPE_UP = 0;
+	public static final int TYPE_RIGHT = 1;
+	public static final int TYPE_DOWN = 2;
+	public static final int TYPE_LEFT = 3;
+	public static final int TYPE_CENTER = 4;
 }
