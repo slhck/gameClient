@@ -293,11 +293,27 @@ public class GestureLogger {
 	 *            The intervals of the gestures
 	 */
 	private void sendGesture(int type[], double val[], double interval[], int position[]) {
-		// TODO the message is composed of integers only at the moment
+		 // TODO the message is composed of integers only at the moment
 		
 		String message = "";
 		message += "LR/" + type[INDEX_PITCH] + "/" + (int) val[INDEX_PITCH] + "/" + (int) Math.abs(interval[INDEX_PITCH]) + "/" + position[INDEX_PITCH] + "#";
 		message += "UD/" + type[INDEX_ROLL] + "/" + (int) val[INDEX_ROLL] + "/" + (int) Math.abs(interval[INDEX_ROLL]) + "/" + position[INDEX_ROLL] + "#";
+		message += "\n";
+		
+		// set the last message sent so the activity can display it
+		lastMessage = message;
+		
+		sendMessage(message);
+	}
+	
+	/**
+	 * Sends a click over UDP
+	 */
+	public void sendClick() {
+		
+		String message = "";
+		message += "CL/" + GestureType.TYPE_CLICK + "/0" + "/0" + "/0" + "#";
+		message += "CL/" + GestureType.TYPE_CLICK + "/0" + "/0" + "/0" + "#";
 		message += "\n";
 		
 		// set the last message sent so the activity can display it
@@ -336,6 +352,7 @@ abstract class GestureType {
 	public static final int TYPE_DOWN = 2;
 	public static final int TYPE_LEFT = 3;
 	public static final int TYPE_NO_MOVEMENT = 4;
+	public static final int TYPE_CLICK = 5;
 }
 
 abstract class PositionType {

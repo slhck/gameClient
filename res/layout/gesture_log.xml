@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-  
-  <TextView android:text="" android:id="@+id/textYaw" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
-  <TextView android:text="" android:id="@+id/textPitch" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
-  <TextView android:text="" android:id="@+id/textRoll" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>    
-  
-  <TextView android:text="" android:id="@+id/textYawRecalc" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
-  <TextView android:text="" android:id="@+id/textPitchRecalc" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
-  <TextView android:text="" android:id="@+id/textRollRecalc" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp"></TextView>
-  
-  <TextView android:text="" android:id="@+id/textMessage" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_width="wrap_content" android:paddingTop="15dp" android:paddingBottom="5dp"></TextView>
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<TextView android:text="" android:id="@+id/textYaw"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:paddingTop="5dp"
+		android:paddingBottom="5dp"></TextView>
+	<TextView android:text="" android:id="@+id/textPitch"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:paddingTop="5dp"
+		android:paddingBottom="5dp"></TextView>
+	<TextView android:text="" android:id="@+id/textRoll"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:paddingTop="5dp"
+		android:paddingBottom="10dp"></TextView>
+
+
+
+	<Button android:text="Fire!" android:id="@+id/buttonFire"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:layout_gravity="center" android:paddingTop="20dp"
+		android:paddingBottom="20dp" android:paddingLeft="40dp"
+		android:paddingRight="40dp"></Button>
+
+	<TextView android:text="" android:id="@+id/textMessage"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:paddingTop="15dp"
+		android:paddingBottom="5dp"></TextView>
+
+	<TextView android:text="" android:id="@+id/textYawRecalc"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:paddingTop="5dp"
+		android:paddingBottom="5dp"></TextView>
+	<TextView android:text="" android:id="@+id/textPitchRecalc"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:paddingTop="5dp"
+		android:paddingBottom="5dp"></TextView>
+	<TextView android:text="" android:id="@+id/textRollRecalc"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:paddingTop="5dp"
+		android:paddingBottom="5dp"></TextView>
+
 </LinearLayout>

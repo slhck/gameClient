@@ -12,10 +12,11 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import at.ac.univie.gameclient.R;
-import at.ac.univie.gameclient.R.id;
-import at.ac.univie.gameclient.R.layout;
 
 public class GestureActivity extends Activity implements SensorEventListener {
 
@@ -32,6 +33,8 @@ public class GestureActivity extends Activity implements SensorEventListener {
 	TextView		m_pitch = null;
 	TextView		m_roll = null;
 	TextView		m_message = null;
+	
+	Button			m_button = null;
 	
 	float[] 		m_R 		= new float[m_matrix_size];
 	float[] 		m_R_out 	= new float[m_matrix_size];
@@ -68,7 +71,18 @@ public class GestureActivity extends Activity implements SensorEventListener {
         m_pitch = (TextView) findViewById(R.id.textPitch);
         m_roll = (TextView) findViewById(R.id.textRoll);
         m_message = (TextView) findViewById(R.id.textMessage);
+        
+        m_button = (Button) findViewById(R.id.buttonFire);
+        m_button.setOnClickListener(mButtonListener);
+        
     }
+    
+    private OnClickListener mButtonListener = new OnClickListener() {
+        public void onClick(View v) {
+          // do something when the button is clicked
+        	mGestureLogger.sendClick();
+        }
+    };
 
     protected void onResume() {
     	super.onResume();
