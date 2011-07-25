@@ -3,6 +3,31 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
+	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:stretchColumns="1">
+
+		<TableRow>
+
+			<Button android:layout_gravity="left" android:paddingTop="20dp"
+				android:paddingBottom="20dp" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="Fire 1!"
+				android:paddingRight="40dp" android:id="@+id/buttonFire"
+				android:paddingLeft="40dp"></Button>
+
+			<Button android:layout_gravity="right" android:paddingTop="20dp"
+				android:paddingBottom="20dp" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="Fire 2!"
+				android:paddingRight="40dp" android:id="@+id/buttonFire2"
+				android:paddingLeft="40dp"></Button>
+
+
+		</TableRow>
+
+
+	</TableLayout>
+
+
 	<TextView android:text="" android:id="@+id/textYaw"
 		android:layout_height="wrap_content" android:layout_gravity="center"
 		android:layout_width="wrap_content" android:paddingTop="5dp"
@@ -18,16 +43,11 @@
 
 
 
-	<Button android:text="Fire!" android:id="@+id/buttonFire"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:layout_gravity="center" android:paddingTop="20dp"
-		android:paddingBottom="20dp" android:paddingLeft="40dp"
-		android:paddingRight="40dp"></Button>
-
 	<TextView android:text="" android:id="@+id/textMessage"
 		android:layout_height="wrap_content" android:layout_gravity="center"
 		android:layout_width="wrap_content" android:paddingTop="15dp"
 		android:paddingBottom="5dp"></TextView>
+		
 
 	<TextView android:text="" android:id="@+id/textYawRecalc"
 		android:layout_height="wrap_content" android:layout_gravity="center"

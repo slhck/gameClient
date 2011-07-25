@@ -309,7 +309,7 @@ public class GestureLogger {
 	/**
 	 * Sends a click over UDP
 	 */
-	public void sendClick() {
+	public void sendPrimaryClick() {
 		
 		String message = "";
 		message += "CL/" + GestureType.TYPE_CLICK + "/0" + "/0" + "/0" + "#";
@@ -321,6 +321,24 @@ public class GestureLogger {
 		
 		sendMessage(message);
 	}
+	
+	/**
+	 * Sends a secondary click over UDP
+	 */
+	public void sendSecondaryClick() {
+		
+		String message = "";
+		message += "CL/" + GestureType.TYPE_CLICK_2 + "/0" + "/0" + "/0" + "#";
+		message += "CL/" + GestureType.TYPE_CLICK_2 + "/0" + "/0" + "/0" + "#";
+		message += "\n";
+		
+		// set the last message sent so the activity can display it
+		lastMessage = message;
+		
+		sendMessage(message);
+	}
+	
+	
 
 	/**
 	 * Sends a message to the UDP server
@@ -353,6 +371,7 @@ abstract class GestureType {
 	public static final int TYPE_LEFT = 3;
 	public static final int TYPE_NO_MOVEMENT = 4;
 	public static final int TYPE_CLICK = 5;
+	public static final int TYPE_CLICK_2 = 6;
 }
 
 abstract class PositionType {

@@ -34,7 +34,8 @@ public class GestureActivity extends Activity implements SensorEventListener {
 	TextView		m_roll = null;
 	TextView		m_message = null;
 	
-	Button			m_button = null;
+	Button			m_button_fire = null;
+	Button			m_button_fire_2 = null;
 	
 	float[] 		m_R 		= new float[m_matrix_size];
 	float[] 		m_R_out 	= new float[m_matrix_size];
@@ -72,15 +73,25 @@ public class GestureActivity extends Activity implements SensorEventListener {
         m_roll = (TextView) findViewById(R.id.textRoll);
         m_message = (TextView) findViewById(R.id.textMessage);
         
-        m_button = (Button) findViewById(R.id.buttonFire);
-        m_button.setOnClickListener(mButtonListener);
+        m_button_fire = (Button) findViewById(R.id.buttonFire);
+        m_button_fire.setOnClickListener(mButtonFireListener);
+        
+        m_button_fire_2 = (Button) findViewById(R.id.buttonFire2);
+        m_button_fire_2.setOnClickListener(mButtonFire2Listener);
         
     }
     
-    private OnClickListener mButtonListener = new OnClickListener() {
+    private OnClickListener mButtonFireListener = new OnClickListener() {
         public void onClick(View v) {
           // do something when the button is clicked
-        	mGestureLogger.sendClick();
+        	mGestureLogger.sendPrimaryClick();
+        }
+    };
+    
+    private OnClickListener mButtonFire2Listener = new OnClickListener() {
+        public void onClick(View v) {
+          // do something when the button is clicked
+        	mGestureLogger.sendSecondaryClick();
         }
     };
 
