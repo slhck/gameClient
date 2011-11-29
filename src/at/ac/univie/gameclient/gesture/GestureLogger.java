@@ -319,6 +319,8 @@ public class GestureLogger {
 		// set the last message sent so the activity can display it
 		lastMessage = message;
 		
+		Log.d(TAG, "SENT PRIMARY CLICK");
+		
 		sendMessage(message);
 	}
 	
@@ -334,6 +336,8 @@ public class GestureLogger {
 		
 		// set the last message sent so the activity can display it
 		lastMessage = message;
+		
+		Log.d(TAG, "SENT SECONDARY CLICK");
 		
 		sendMessage(message);
 	}
